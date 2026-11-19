@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
-const API_URL = "http://localhost:5000/api/admin";
-const ORDERS_API_URL = "http://localhost:5000/api/orders";
-const FEEDBACK_API_URL = "http://localhost:5000/api/feedback";
+const API_URL = "/api/admin";
+const ORDERS_API_URL = "/api/orders";
+const FEEDBACK_API_URL = "/api/feedback";
 
 const initialForm = {
   name: "",
@@ -652,7 +652,7 @@ function AdminDashboard() {
                               {item.image ? (
                                 <img
                                   className="admin-menu-card-image"
-                                  src={`http://localhost:5000${item.image}`}
+                                 src={item.image} 
                                   alt={item.name}
                                 />
                               ) : (
