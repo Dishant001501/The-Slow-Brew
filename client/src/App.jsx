@@ -346,9 +346,7 @@ function Menu({ onAddToCart }) {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          "http://localhost:5000/api/admin/menu"
-        );
+        const response = await fetch("/api/admin/menu");
 
         const data = await response.json();
 
@@ -364,9 +362,7 @@ function Menu({ onAddToCart }) {
           category: item.category,
           price: Number(item.price),
           description: item.description,
-          image: item.image
-            ? `http://localhost:5000${item.image}`
-            : "",
+          image: item.image || "",
         }));
 
         setMenuItems(formattedItems);
@@ -746,7 +742,6 @@ function Contact() {
   );
 }
 
-
 function Cart({ cart, onUpdateQuantity, onRemoveItem }) {
   const navigate = useNavigate();
 
@@ -907,7 +902,6 @@ function Cart({ cart, onUpdateQuantity, onRemoveItem }) {
   );
 }
 
-
 function loadRazorpayScript() {
   return new Promise((resolve) => {
     if (window.Razorpay) {
@@ -926,7 +920,6 @@ function loadRazorpayScript() {
   });
 }
 
-
 function Checkout({ cart, onOrderSuccess }) {
   const [mobileNumber, setMobileNumber] = useState("");
   const [tableNumber, setTableNumber] = useState("");
@@ -935,7 +928,6 @@ function Checkout({ cart, onOrderSuccess }) {
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(null);
 
-  // Feedback states
   const [feedbackRating, setFeedbackRating] = useState(5);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackLoading, setFeedbackLoading] = useState(false);
@@ -943,7 +935,6 @@ function Checkout({ cart, onOrderSuccess }) {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [feedbackPopupOpen, setFeedbackPopupOpen] = useState(false);
 
-  // Automatically open feedback popup after order success
   useEffect(() => {
     if (orderSuccess) {
       setFeedbackPopupOpen(true);
@@ -955,7 +946,6 @@ function Checkout({ cart, onOrderSuccess }) {
     0
   );
 
-  // PLACE ORDER
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -973,7 +963,6 @@ function Checkout({ cart, onOrderSuccess }) {
       setLoading(true);
       setNotice("");
 
-      // ONLINE PAYMENT
       if (paymentMethod === "Online") {
         const scriptLoaded = await loadRazorpayScript();
 
@@ -984,7 +973,7 @@ function Checkout({ cart, onOrderSuccess }) {
         }
 
         const response = await fetch(
-          "http://localhost:5000/api/orders/create-razorpay-order",
+          "/api/orders/create-razorpay-order",
           {
             method: "POST",
             headers: {
@@ -1031,7 +1020,7 @@ function Checkout({ cart, onOrderSuccess }) {
               setNotice("");
 
               const verifyResponse = await fetch(
-                "http://localhost:5000/api/orders/verify-payment",
+                "/api/orders/verify-payment",
                 {
                   method: "POST",
                   headers: {
@@ -1093,9 +1082,8 @@ function Checkout({ cart, onOrderSuccess }) {
         return;
       }
 
-      // CASH PAYMENT
       const response = await fetch(
-        "http://localhost:5000/api/orders",
+        "/api/orders",
         {
           method: "POST",
           headers: {
@@ -1130,7 +1118,6 @@ function Checkout({ cart, onOrderSuccess }) {
     }
   }
 
-  // SUBMIT CUSTOMER FEEDBACK
   async function handleFeedbackSubmit(event) {
     event.preventDefault();
 
@@ -1144,7 +1131,7 @@ function Checkout({ cart, onOrderSuccess }) {
       setFeedbackNotice("");
 
       const response = await fetch(
-        "http://localhost:5000/api/feedback",
+        "/api/feedback",
         {
           method: "POST",
           headers: {
@@ -1175,7 +1162,6 @@ function Checkout({ cart, onOrderSuccess }) {
     }
   }
 
-  // ORDER RECEIPT
   if (orderSuccess) {
     const orderDate = new Date(orderSuccess.createdAt);
 
@@ -1315,7 +1301,6 @@ function Checkout({ cart, onOrderSuccess }) {
           </div>
         </div>
 
-        {/* AUTOMATIC FEEDBACK POPUP */}
         {feedbackPopupOpen && (
           <div className="feedback-popup-overlay">
             <div
@@ -1440,7 +1425,6 @@ function Checkout({ cart, onOrderSuccess }) {
     );
   }
 
-  // NORMAL CHECKOUT FORM
   return (
     <main className="inner-page checkout-page">
       <section className="page-heading checkout-heading">
@@ -1658,8 +1642,6 @@ function Checkout({ cart, onOrderSuccess }) {
   );
 }
 
-
-// Protect Admin Dashboard
 function ProtectedAdminRoute({ children }) {
   const token = localStorage.getItem("adminToken");
 
